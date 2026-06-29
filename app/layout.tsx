@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import MainLayout from "@/components/layout/MainLayout";
 
 export const metadata: Metadata = {
-  title: "Encyclopedia",
-  description: "Research Encyclopedia Project",
+  title: "دانشنامه اقتصاد اجتماعی و همبستگی",
+  description: "مرجع فارسی دانشنامه اقتصاد اجتماعی و همبستگی سازمان ملل متحد",
+  icons: {
+    icon: "/favicon.ico",
+  },
 };
 
 export default function RootLayout({
@@ -13,9 +15,9 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="fa">
-      <body style={{ margin: 0 }}>
-        <MainLayout>{children}</MainLayout>
+    <html lang="fa" dir="rtl">
+      <body>
+        {children}
       </body>
     </html>
   );

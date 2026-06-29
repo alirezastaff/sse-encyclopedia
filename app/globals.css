@@ -1,11 +1,35 @@
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
-
 @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
+
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
   margin: 0;
   padding: 0;
+  background: #fff;
+  color: #111;
+}
+
+/* Layout پایه */
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 40px 20px;
+}
+
+/* Header ساده */
+.header {
+  padding: 16px 24px;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.nav a {
+  margin-left: 12px;
+  text-decoration: none;
+  color: #333;
 }

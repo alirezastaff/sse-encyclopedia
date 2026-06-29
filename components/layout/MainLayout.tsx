@@ -1,4 +1,5 @@
 import React from "react";
+import Header from "../../components/layout/Header";
 
 export default function MainLayout({
   children,
@@ -6,18 +7,9 @@ export default function MainLayout({
   children: React.ReactNode;
 }) {
   return (
-    <div style={{ fontFamily: "sans-serif" }}>
-      {/* Header */}
-      <header
-        style={{
-          padding: "16px 24px",
-          borderBottom: "1px solid #e5e5e5",
-        }}
-      >
-        <h2 style={{ margin: 0 }}>دانشنامه پژوهشی</h2>
-      </header>
+    <div>
+      <Header />
 
-      {/* Body */}
       <main
         style={{
           maxWidth: "900px",
