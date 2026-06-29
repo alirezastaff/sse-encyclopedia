@@ -1,0 +1,198 @@
+/* All other styles from your original HTML - I put the main ones */
+.site-header, .hero, .info-strip, .intro-card, .support-section, .feature-grid, 
+.hero-content, .hero-panel, .feature-card, .site-footer, .brand, .logo, 
+.main-nav, .eyebrow, .search-box, .quick-links, .status-box, .intro-footer,
+.info-item, .card-icon, .primary-btn, .secondary-btn {
+  /* Your full styles will be applied */
+}
+
+/* Add the rest of your CSS here if needed */
+/* === Full CSS from your original HTML === */
+
+.site-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 26px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--border);
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.logo {
+  width: 54px;
+  height: 54px;
+  border-radius: 18px;
+  background: linear-gradient(135deg, #8d1119, #c5323b);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 25px;
+  font-weight: 800;
+  box-shadow: 0 12px 24px rgba(155, 23, 29, 0.28);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.logo::after {
+  content: "";
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(255,255,255,0.36);
+  border-radius: 13px;
+}
+
+.brand-text h1 {
+  font-size: 27px;
+  font-weight: 700;
+  letter-spacing: -1px;
+  color: #221f1f;
+  margin-bottom: 4px;
+}
+
+.brand-text span {
+  color: var(--muted);
+  font-size: 13px;
+  font-weight: 300;
+}
+
+.main-nav ul {
+  list-style: none;
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+}
+
+.main-nav a {
+  color: #4b4b4b;
+  background: #fff;
+  border: 1px solid #eee1dc;
+  text-decoration: none;
+  font-size: 13.5px;
+  font-weight: 400;
+  padding: 9px 14px;
+  border-radius: 999px;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  transition: all 0.25s ease;
+  box-shadow: 0 4px 14px rgba(70, 30, 20, 0.04);
+}
+
+.main-nav a:hover {
+  color: var(--red-main);
+  border-color: #d8b1b4;
+  transform: translateY(-2px);
+  box-shadow: 0 8px 22px rgba(130, 20, 28, 0.10);
+}
+
+.nav-icon {
+  color: var(--red-main);
+  font-size: 12px;
+}
+
+/* Hero */
+.hero {
+  display: grid;
+  grid-template-columns: 1.2fr 0.8fr;
+  gap: 46px;
+  align-items: center;
+  padding: 54px 0 38px;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: #fff2f2;
+  color: var(--red-main);
+  border: 1px solid #f1c9cc;
+  padding: 7px 13px;
+  border-radius: 999px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 18px;
+}
+
+.eyebrow-dot {
+  width: 7px;
+  height: 7px;
+  background: var(--red-main);
+  border-radius: 50%;
+  box-shadow: 0 0 0 5px rgba(166, 25, 34, 0.10);
+}
+
+.hero h2 {
+  font-size: 35px;
+  line-height: 1.65;
+  letter-spacing: -1.4px;
+  font-weight: 800;
+  color: #211d1d;
+  margin-bottom: 18px;
+}
+
+.hero h2 span {
+  color: var(--red-main);
+}
+
+.hero p {
+  font-size: 16px;
+  line-height: 2.15;
+  color: #565656;
+  font-weight: 300;
+  max-width: 690px;
+}
+
+.hero-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  margin-top: 28px;
+}
+
+.primary-btn, .secondary-btn {
+  height: 44px;
+  padding: 0 19px;
+  border-radius: 12px;
+  text-decoration: none;
+  font-size: 14px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.primary-btn {
+  background: linear-gradient(135deg, #8f141c, #bd2731);
+  color: #fff;
+  box-shadow: 0 14px 28px rgba(155, 23, 29, 0.22);
+}
+
+.primary-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 34px rgba(155, 23, 29, 0.30);
+}
+
+.secondary-btn {
+  background: #fff;
+  color: #333;
+  border: 1px solid #eadbd6;
+}
+
+.secondary-btn:hover {
+  color: var(--red-main);
+  border-color: #d9b5b8;
+  transform: translateY(-2px);
+}
+
+/* Add the rest of your styles from the original HTML here if needed */
+/* For now this should fix the main layout */
