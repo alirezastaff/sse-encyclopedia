@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 const styles = `
   @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
 
@@ -727,8 +729,8 @@ export default function FaHomePage() {
                 </p>
 
                 <div className="hero-actions">
-                  <a href="#" className="primary-btn">مشاهده فهرست مدخل‌ها</a>
-                  <a href="#" className="secondary-btn">درباره این دانشنامه</a>
+                  <Link href="/fa/archive" className="primary-btn">مشاهده فهرست مدخل‌ها</Link>
+                  <Link href="/fa/archive" className="secondary-btn">بایگانی</Link>
                 </div>
               </div>
 
@@ -741,10 +743,10 @@ export default function FaHomePage() {
                 </div>
 
                 <div className="quick-links">
-                  <a href="#">مدخل‌های تازه</a>
-                  <a href="#">فهرست الفبایی</a>
-                  <a href="#">بایگانی</a>
-                  <a href="#">مدخل تصادفی</a>
+                  <Link href="/fa/archive">مدخل‌ها</Link>
+                  <Link href="/fa/archive">فهرست الفبایی</Link>
+                  <Link href="/fa/archive">بایگانی</Link>
+                  <Link href="/fa/archive">مدخل تصادفی</Link>
                 </div>
 
                 <div className="status-box">

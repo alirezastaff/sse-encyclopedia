@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function EnHomePage() {
   const styles = `
     @import url('https://fonts.googleapis.com/css2?family=Vazirmatn:wght@300;400;500;600;700;800&display=swap');
@@ -583,8 +585,8 @@ export default function EnHomePage() {
                 </p>
 
                 <div className="hero-actions">
-                  <a href="#" className="primary-btn">Browse entries</a>
-                  <a href="#" className="secondary-btn">About this encyclopedia</a>
+                  <Link href="/en/archive" className="primary-btn">Browse entries</Link>
+                  <Link href="/en/archive" className="secondary-btn">Archive</Link>
                 </div>
               </div>
 
@@ -596,10 +598,10 @@ export default function EnHomePage() {
                 </div>
 
                 <div className="quick-links">
-                  <a href="#">New entries</a>
-                  <a href="#">Alphabetical list</a>
-                  <a href="#">Archive</a>
-                  <a href="#">Random entry</a>
+                  <Link href="/en/archive">Entries</Link>
+                  <Link href="/en/archive">Alphabetical list</Link>
+                  <Link href="/en/archive">Archive</Link>
+                  <Link href="/en/archive">Random entry</Link>
                 </div>
 
                 <div className="status-box">
