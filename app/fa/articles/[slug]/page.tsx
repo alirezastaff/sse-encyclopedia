@@ -1,12 +1,11 @@
-export default function FaArticlePage({
+import ArticlePageView from "@/components/article/ArticlePageView";
+
+export default async function FaArticlePage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  return (
-    <main style={{ padding: "40px" }}>
-      <h1>مقاله فارسی</h1>
-      <p>Slug: {params.slug}</p>
-    </main>
-  );
+  const { slug } = await params;
+
+  return <ArticlePageView locale="fa" slug={slug} />;
 }

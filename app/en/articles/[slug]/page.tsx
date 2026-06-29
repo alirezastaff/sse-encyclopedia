@@ -1,12 +1,11 @@
-export default function EnArticlePage({
+import ArticlePageView from "@/components/article/ArticlePageView";
+
+export default async function EnArticlePage({
   params,
 }: {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }) {
-  return (
-    <main style={{ padding: "40px" }}>
-      <h1>English Article</h1>
-      <p>Slug: {params.slug}</p>
-    </main>
-  );
+  const { slug } = await params;
+
+  return <ArticlePageView locale="en" slug={slug} />;
 }

@@ -1,6 +1,8 @@
 "use client";
 
+import Link from "next/link";
 import { useMemo, useState } from "react";
+import { articles, getArticleBySlug } from "@/lib/articles";
 
 type Locale = "fa" | "en";
 
@@ -18,6 +20,20 @@ type Part = {
   enTitle: string;
   entries: Entry[];
 };
+
+const archiveArticles = articles.map((article) => ({
+  id: article.slug,
+  slug: article.slug,
+  titleFa: article.title.fa,
+  titleEn: article.title.en,
+  descriptionFa: article.description.fa,
+  descriptionEn: article.description.en,
+  author: article.author,
+  startPage: article.startPage,
+  categoryFa: article.category.fa,
+  categoryEn: article.category.en,
+  featured: article.startPage === 2,
+}));
 
 const encyclopediaParts: Part[] = [
   {
@@ -123,9 +139,32 @@ const styles = `
     padding: 20px 18px 34px;
     color: var(--text);
     background: radial-gradient(circle at top right, rgba(166, 25, 34, 0.08), transparent 24%), linear-gradient(180deg, #fbf7f1 0%, #fffdf9 100%);
-    font-family: Tahoma, "Vazirmatn", "IRANSans", sans-serif;
+    font-family: "Vazirmatn", Tahoma, Arial, sans-serif;
     font-size: 14px;
     line-height: 1.7;
+  }
+
+  .archive-page--fa {
+    direction: rtl;
+    text-align: right;
+  }
+
+  .archive-page--en {
+    direction: ltr;
+    text-align: left;
+  }
+
+  .archive-page--en .searchbox {
+    direction: ltr;
+  }
+
+  .archive-page--en .searchbox input {
+    text-align: left;
+  }
+
+  .archive-page--en .part-toggle,
+  .archive-page--en .entry-btn {
+    text-align: left;
   }
 
   .hero {
@@ -160,8 +199,8 @@ const styles = `
 
   .toolbar { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; background: rgba(255,255,255,0.84); border: 1px solid var(--line); border-radius: var(--radius-lg); box-shadow: var(--card-shadow); padding: 10px; margin-bottom: 16px; backdrop-filter: blur(10px); position: sticky; top: 10px; z-index: 10; }
   .searchbox { display: flex; align-items: center; gap: 8px; background: var(--white); border: 1px solid var(--line); border-radius: 999px; padding: 7px 12px; }
-  .searchbox span { color: var(--red-700); font-weight: 800; font-size: 0.82rem; white-space: nowrap; }
-  .searchbox input { width: 100%; border: 0; outline: 0; background: transparent; color: var(--text); padding: 4px; font-size: 0.84rem; }
+  .searchbox span { color: var(--red-700); font-weight: 800; font-size: 0.82rem; white-space: nowrap; font-family: "Vazirmatn", Tahoma, Arial, sans-serif; }
+  .searchbox input { width: 100%; border: 0; outline: 0; background: transparent; color: var(--text); padding: 4px; font-size: 0.84rem; font-family: "Vazirmatn", Tahoma, Arial, sans-serif; }
   .actions { display: flex; gap: 8px; flex-wrap: wrap; }
   .btn { border: 1px solid var(--line); background: var(--white); color: var(--red-900); border-radius: 999px; padding: 7px 12px; cursor: pointer; font-size: 0.82rem; transition: 0.2s ease; }
   .btn:hover { transform: translateY(-1px); background: #fff7f3; border-color: rgba(166,25,34,0.35); }
@@ -176,8 +215,8 @@ const styles = `
   .part { border: 1px solid var(--line); border-radius: 16px; background: #fffdfb; overflow: hidden; margin-bottom: 10px; }
   .part-toggle { width: 100%; border: 0; background: transparent; cursor: pointer; padding: 11px 12px; display: grid; grid-template-columns: 1fr auto; gap: 12px; text-align: right; align-items: center; }
   .part-toggle:hover { background: rgba(166,25,34,0.04); }
-  .part-fa { font-weight: 900; color: var(--red-900); font-size: 0.86rem; }
-  .part-en { direction: ltr; text-align: left; color: var(--muted); font-family: Georgia, "Times New Roman", serif; font-size: 0.76rem; margin-top: 2px; }
+  .part-fa { font-weight: 900; color: var(--red-900); font-size: 0.86rem; font-family: "Vazirmatn", Tahoma, Arial, sans-serif; }
+  .part-en { direction: ltr; text-align: left; color: var(--muted); font-family: "Vazirmatn", Tahoma, Arial, sans-serif; font-size: 0.76rem; margin-top: 2px; }
   .mark { width: 28px; height: 28px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); background: var(--cream); color: var(--red-700); font-weight: 900; }
   .entries { display: none; padding: 0 8px 8px; }
   .part.open .entries { display: grid; gap: 6px; }
@@ -185,9 +224,9 @@ const styles = `
   .entry-btn:hover { border-color: rgba(166,25,34,0.22); transform: translateY(-1px); box-shadow: 0 6px 14px rgba(125,16,23,0.05); }
   .entry-btn.active { background: linear-gradient(90deg, rgba(166,25,34,0.08), rgba(199,75,82,0.03)); border-color: rgba(166,25,34,0.34); }
   .entry-no { min-width: 30px; height: 30px; border-radius: 10px; display: inline-flex; align-items: center; justify-content: center; border: 1px solid var(--line); background: var(--cream); color: var(--red-700); font-size: 0.74rem; font-weight: 900; margin-top: 1px; }
-  .entry-fa { font-size: 0.82rem; font-weight: 800; color: var(--text); line-height: 1.45; }
-  .entry-en { direction: ltr; text-align: left; font-size: 0.76rem; color: var(--muted); font-family: Georgia, "Times New Roman", serif; line-height: 1.35; margin-top: 1px; }
-  .entry-meta { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
+  .entry-fa { font-size: 0.82rem; font-weight: 800; color: var(--text); line-height: 1.45; font-family: "Vazirmatn", Tahoma, Arial, sans-serif; }
+  .entry-en { direction: ltr; text-align: left; font-size: 0.76rem; color: var(--muted); font-family: "Vazirmatn", Tahoma, Arial, sans-serif; line-height: 1.35; margin-top: 1px; }
+  .entry-meta { font-size: 0.68rem; color: var(--muted); margin-top: 2px; font-family: "Vazirmatn", Tahoma, Arial, sans-serif; }
   .reader-body { padding: 16px; min-height: 560px; }
   .empty { min-height: 470px; border: 1px dashed rgba(166,25,34,0.24); border-radius: var(--radius-lg); background: linear-gradient(135deg, rgba(251,247,241,0.95), rgba(255,255,255,0.93)); display: flex; align-items: center; justify-content: center; text-align: center; padding: 24px; color: var(--muted); }
   .empty h3 { margin: 0 0 8px; color: var(--red-900); font-size: 1rem; }
@@ -197,7 +236,7 @@ const styles = `
   .entry-card > div { position: relative; z-index: 2; }
   .entry-kicker { display: inline-flex; padding: 5px 9px; border-radius: 999px; border: 1px solid rgba(255,255,255,0.18); background: rgba(255,255,255,0.10); font-size: 0.74rem; margin-bottom: 10px; color: rgba(255,255,255,0.9); }
   .entry-card h2 { margin: 0 0 5px; font-size: 1.3rem; line-height: 1.45; }
-  .entry-card .entry-main-en { direction: ltr; text-align: left; font-family: Georgia, "Times New Roman", serif; color: rgba(255,255,255,0.84); font-size: 0.95rem; }
+  .entry-card .entry-main-en { direction: ltr; text-align: left; font-family: "Vazirmatn", Tahoma, Arial, sans-serif; color: rgba(255,255,255,0.84); font-size: 0.95rem; }
   .reader-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; border: 1px solid var(--line); border-radius: var(--radius-lg); padding: 10px 12px; background: #fffdfb; }
   .reader-top strong { display: block; color: var(--red-900); font-size: 0.86rem; margin-bottom: 1px; }
   .reader-top span { color: var(--muted); font-size: 0.75rem; }
@@ -207,7 +246,7 @@ const styles = `
   .lang-btn { position: relative; z-index: 2; border: 0; background: transparent; cursor: pointer; border-radius: 999px; padding: 7px 10px; font-size: 0.78rem; font-weight: 800; color: var(--muted); }
   .lang-switch[data-lang="fa"] .lang-btn[data-lang="fa"], .lang-switch[data-lang="en"] .lang-btn[data-lang="en"] { color: #fff; }
   .article { border: 1px solid var(--line); border-radius: var(--radius-lg); background: #fffdfb; padding: 18px; min-height: 250px; }
-  .article.en { direction: ltr; text-align: left; font-family: Georgia, "Times New Roman", serif; }
+  .article.en { direction: ltr; text-align: left; font-family: "Vazirmatn", Tahoma, Arial, sans-serif; }
   .lang-label { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--line); background: var(--cream); color: var(--red-700); border-radius: 999px; padding: 5px 9px; font-size: 0.75rem; font-weight: 800; margin-bottom: 12px; }
   .article h3 { margin: 0 0 10px; color: var(--red-900); font-size: 1.08rem; line-height: 1.45; }
   .article p { margin: 0 0 12px; font-size: 0.88rem; }
@@ -233,6 +272,8 @@ export default function ArchivePage({ locale = "fa" }: { locale?: Locale }) {
   const [expandedParts, setExpandedParts] = useState<Record<string, boolean>>(
     Object.fromEntries(encyclopediaParts.map((part) => [part.id, true]))
   );
+
+  const featuredArticle = archiveArticles[0];
 
   const filteredParts = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -313,7 +354,7 @@ export default function ArchivePage({ locale = "fa" }: { locale?: Locale }) {
         emptyText: "Choose an entry from the list on the right.",
         selectedBadge: (n: number) => `Entry ${n}`,
         languageHeading: "Entry display language",
-        languageSubheading: "Switch the sample text between Persian and English",
+        languageSubheading: "Switch the preview text between Persian and English",
         faView: "Persian view",
         enView: "English view",
         entryMetaLabel: "Entry number",
@@ -337,7 +378,7 @@ export default function ArchivePage({ locale = "fa" }: { locale?: Locale }) {
   };
 
   return (
-    <div className="archive-page">
+    <div className={`archive-page ${isFa ? "archive-page--fa" : "archive-page--en"}`} dir={isFa ? "rtl" : "ltr"} lang={locale}>
       <style>{styles}</style>
 
       <section className="hero">
@@ -398,7 +439,7 @@ export default function ArchivePage({ locale = "fa" }: { locale?: Locale }) {
                 <button className="part-toggle" type="button" onClick={() => togglePart(part.id)}>
                   <div>
                     <div className="part-fa">{isFa ? part.faTitle : part.enTitle}</div>
-                    <div className="part-en">{isFa ? part.enTitle : part.faTitle}</div>
+                    <div className="part-en">{isFa ? part.enTitle : `Section ${part.number}`}</div>
                   </div>
                   <span className="mark">{expandedParts[part.id] ? "−" : "+"}</span>
                 </button>
@@ -414,7 +455,8 @@ export default function ArchivePage({ locale = "fa" }: { locale?: Locale }) {
                       <span className="entry-no">{isFa ? toFaNum(entry.no) : entry.no}</span>
                       <span>
                         <div className="entry-fa">{isFa ? entry.fa : entry.en}</div>
-                        <div className="entry-en">{isFa ? entry.en : entry.fa}</div>
+                        {!isFa && <div className="entry-en">English entry</div>}
+                        {isFa ? <div className="entry-en">{entry.en}</div> : null}
                         <div className="entry-meta">{isFa ? `صفحه ${toFaNum(entry.page)}` : `Page ${entry.page}`}</div>
                       </span>
                     </button>
@@ -448,7 +490,7 @@ export default function ArchivePage({ locale = "fa" }: { locale?: Locale }) {
                   <div>
                     <div className="entry-kicker">{isFa ? selectedEntry.partFa : selectedEntry.partEn}</div>
                     <h2>{isFa ? selectedEntry.fa : selectedEntry.en}</h2>
-                    <div className="entry-main-en">{isFa ? selectedEntry.en : selectedEntry.fa}</div>
+                    <div className="entry-main-en">{isFa ? selectedEntry.en : selectedEntry.en}</div>
                   </div>
                 </section>
 
@@ -464,39 +506,66 @@ export default function ArchivePage({ locale = "fa" }: { locale?: Locale }) {
                   </div>
                 </section>
 
-                <article className={`article ${activeLanguage === "en" ? "en" : ""}`}>
-                  {activeLanguage === "fa" ? (
-                    <>
-                      <div className="lang-label">{strings.faView}</div>
-                      <h3>{selectedEntry.fa}</h3>
-                      <p>
-                        {isFa
-                          ? `این مدخل از فهرست کتاب دانشنامه استخراج شده و عنوان اصلی انگلیسی آن ${selectedEntry.en} است.`
-                          : `This entry is extracted from the encyclopedia table of contents and paired here with its Persian label.`}
+                {featuredArticle && selectedEntry?.no === 1 ? (
+                  <article className={`article ${activeLanguage === "en" ? "en" : ""}`} dir={activeLanguage === "fa" ? "rtl" : "ltr"} style={{ textAlign: activeLanguage === "fa" ? "right" : "left" }}>
+                    <div className="lang-label">{activeLanguage === "fa" ? strings.faView : strings.enView}</div>
+                    <h3>{activeLanguage === "fa" ? featuredArticle.titleFa : featuredArticle.titleEn}</h3>
+                    <p>{activeLanguage === "fa" ? featuredArticle.descriptionFa : featuredArticle.descriptionEn}</p>
+                    <div className="note" style={{ textAlign: activeLanguage === "fa" ? "right" : "left" }}>
+                      <p style={{ margin: "0 0 12px", lineHeight: 1.9 }}>
+                        {activeLanguage === "fa"
+                          ? "این مدخل، با رویکردی تحلیلی و چندلایه، به بررسی نقش جنبش‌های اجتماعی در شکل‌گیری اقتصاد اجتماعی و همبستگی می‌پردازد و نشان می‌دهد که چگونه کنشگری جمعی از سطح محلی تا جهانی می‌تواند الگوهای اقتصادی جایگزین را تقویت کند و در عین حال بر سیاست‌گذاری عمومی و تحول اجتماعی تأثیر بگذارد."
+                          : "This entry offers a compelling analysis of how social movements have helped shape the social and solidarity economy, showing how collective action can build alternative economic models while also influencing public policy and broader social transformation."}
                       </p>
-                      <div className="note">
-                        {isFa
-                          ? "در این نسخه، فهرست مدخل‌ها از داخل کتاب وارد شده است. در مرحله بعدی می‌توان برای هر مدخل متن کامل، مترجم، نویسنده، چکیده، کلیدواژه و پیوند به صفحه اختصاصی اضافه کرد."
-                          : "In the next step, you can attach full entry content, contributor data, translators, keywords, and a dedicated single page."}
+                      <div style={{ marginBottom: 10 }}>
+                        <strong>{isFa ? "نویسنده" : "Author"}:</strong> {featuredArticle.author}
                       </div>
-                    </>
-                  ) : (
-                    <>
-                      <div className="lang-label">{strings.enView}</div>
-                      <h3>{selectedEntry.en}</h3>
-                      <p>
-                        {isFa
-                          ? `این مدخل از فهرست کتاب دانشنامه استخراج شده و عنوان فارسی آن ${selectedEntry.fa} است.`
-                          : `This entry is extracted from the encyclopedia table of contents and paired here with its Persian label.`}
-                      </p>
-                      <div className="note">
-                        {isFa
-                          ? "در مرحله بعدی می‌توان متن کامل مدخل، مترجم، نویسنده، چکیده، کلیدواژه و پیوند به صفحه اختصاصی را اضافه کرد."
-                          : "In the next step, you can attach full entry content, contributor data, translators, keywords, and a dedicated single page."}
+                      <div style={{ marginBottom: 10 }}>
+                        <strong>{isFa ? "صفحه شروع" : "Start page"}:</strong> {featuredArticle.startPage}
                       </div>
-                    </>
-                  )}
-                </article>
+                      <div style={{ marginBottom: 10 }}>
+                        <strong>{isFa ? "دسته‌بندی" : "Category"}:</strong> {activeLanguage === "fa" ? featuredArticle.categoryFa : featuredArticle.categoryEn}
+                      </div>
+                      <Link href={`/${locale}/articles/${featuredArticle.slug}`} style={{ display: "inline-flex", marginTop: 10, padding: "10px 16px", borderRadius: 999, background: "linear-gradient(135deg, #8f141c, #bd2731)", color: "#fff", textDecoration: "none", fontWeight: 800, boxShadow: "0 10px 20px rgba(155, 23, 29, 0.18)" }}>
+                        {isFa ? "مشاهده کامل مقاله" : "Read full article"}
+                      </Link>
+                    </div>
+                  </article>
+                ) : (
+                  <article className={`article ${activeLanguage === "en" ? "en" : ""}`}>
+                    {activeLanguage === "fa" ? (
+                      <>
+                        <div className="lang-label">{strings.faView}</div>
+                        <h3>{selectedEntry.fa}</h3>
+                        <p>
+                          {isFa
+                            ? `این مدخل از فهرست کتاب دانشنامه استخراج شده و عنوان اصلی انگلیسی آن ${selectedEntry.en} است.`
+                            : `This entry is extracted from the encyclopedia table of contents and paired here with its Persian label.`}
+                        </p>
+                        <div className="note">
+                          {isFa
+                            ? "در این نسخه، فهرست مدخل‌ها از داخل کتاب وارد شده است. در مرحله بعدی می‌توان برای هر مدخل متن کامل، مترجم، نویسنده، چکیده، کلیدواژه و پیوند به صفحه اختصاصی اضافه کرد."
+                            : "In the next step, you can attach full entry content, contributor details, translators, keywords, and a dedicated single page."}
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="lang-label">{strings.enView}</div>
+                        <h3>{selectedEntry.en}</h3>
+                        <p>
+                          {isFa
+                            ? `این مدخل از فهرست کتاب دانشنامه استخراج شده و عنوان فارسی آن ${selectedEntry.fa} است.`
+                            : `This entry is extracted from the encyclopedia table of contents and paired here with its Persian label.`}
+                        </p>
+                        <div className="note">
+                          {isFa
+                            ? "در مرحله بعدی می‌توان متن کامل مدخل، مترجم، نویسنده، چکیده، کلیدواژه و پیوند به صفحه اختصاصی را اضافه کرد."
+                            : "In the next step, you can attach full entry content, contributor details, translators, keywords, and a dedicated single page."}
+                        </div>
+                      </>
+                    )}
+                  </article>
+                )}
 
                 <section className="meta-grid">
                   <div className="meta-box">
